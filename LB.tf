@@ -49,15 +49,49 @@ resource "azurerm_lb_probe" "front_lb_probe" {
   name                = "front-probe-lb"
   port                = 8080
 }
-
-resource "azurerm_lb_rule" "FrontLBRule" {
+/*
+resource "azurerm_lb_nat_rule" "natRule" {
+  resource_group_name            = azurerm_resource_group.resourceGroup.name
+  loadbalancer_id                = azurerm_lb.AppLoadBalancer.id
+  name                           = "HTTPSAccess"
+  protocol                       = "Tcp"
+  frontend_port                  = 8080
+  backend_port                   = 22
+  frontend_ip_configuration_name = azurerm_lb.AppLoadBalancer.frontend_ip_configuration[0].name
+}
+resource "azurerm_lb_rule" "FrontLBRuleTCP" {
   resource_group_name            = azurerm_resource_group.resourceGroup.name
   loadbalancer_id                = azurerm_lb.AppLoadBalancer.id
   name                           = "LBRule"
   protocol                       = "Tcp"
   frontend_port                  = 8080
   backend_port                   = 8080
-  frontend_ip_configuration_name = "LBPublicIPAddress"
-  probe_id                       = azurerm_lb_probe.front_lb_probe.id
+  frontend_ip_configuration_name = azurerm_lb.AppLoadBalancer.frontend_ip_configuration[0].name
+  #probe_id                       = azurerm_lb_probe.front_lb_probe.id
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.lb_back_pool_address.id
+}*/
+resource "azurerm_lb_rule" "FrontLBRuleSSH" {
+  resource_group_name            = azurerm_resource_group.resourceGroup.name
+  loadbalancer_id                = azurerm_lb.AppLoadBalancer.id
+  name                           = "LBRule"
+  protocol                       = "Tcp"
+  frontend_port                  = 22
+  backend_port                   = 22
+  frontend_ip_configuration_name = azurerm_lb.AppLoadBalancer.frontend_ip_configuration[0].name
+  #probe_id                       = azurerm_lb_probe.front_lb_probe.id
   backend_address_pool_id        = azurerm_lb_backend_address_pool.lb_back_pool_address.id
 }
+
+
+resource "azurerm_lb_rule" "FrontLBRule" {
+  resource_group_name            = azurerm_resource_group.resourceGroup.name
+  loadbalancer_id                = azurerm_lb.AppLoadBalancer.id
+  name                           = "LBRule8080"
+  protocol                       = "Tcp"
+  frontend_port                  = 8080
+  backend_port                   = 8080
+  frontend_ip_configuration_name = azurerm_lb.AppLoadBalancer.frontend_ip_configuration[0].name
+  #probe_id                       = azurerm_lb_probe.front_lb_probe.id
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.lb_back_pool_address.id
+}
+

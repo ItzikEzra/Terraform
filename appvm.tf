@@ -1,9 +1,52 @@
+module "APP-VM1" {
+  source = "./VMmodule"
+
+  UbuntuVersion = var.UbuntuVersion
+  VMSize = var.VMSize
+  location = var.location
+  machineName = "APP-VM-01"
+  networkInterfaceid = [azurerm_network_interface.NIC-APP-01.id]
+  password = var.password
+  resourceGroupName = var.resourceGroupName
+  username = var.username
+  diskName = "Disk-app-01"
+}
+
+module "APP-VM2" {
+  source = "./VMmodule"
+
+  UbuntuVersion = var.UbuntuVersion
+  VMSize = var.VMSize
+  location = var.location
+  machineName = "APP-VM-02"
+  networkInterfaceid = [azurerm_network_interface.NIC-APP-02.id]
+  password = var.password
+  resourceGroupName = var.resourceGroupName
+  username = var.username
+  diskName = "Disk-app-02"
+}
+
+module "APP-VM3" {
+  source = "./VMmodule"
+
+  UbuntuVersion = var.UbuntuVersion
+  VMSize = var.VMSize
+  location = var.location
+  machineName = "APP-VM-03"
+  networkInterfaceid = [azurerm_network_interface.NIC-APP-03.id]
+  password = var.password
+  resourceGroupName = var.resourceGroupName
+  username = var.username
+  diskName = "Disk-app-03"
+}
+/*
 resource "azurerm_virtual_machine" "APPVM-01" {
   name                  = "APP-VM-01"
   location              = var.location
   resource_group_name   = var.resourceGroupName
   network_interface_ids = [azurerm_network_interface.NIC-APP-01.id]
   vm_size               = var.VMSize
+  delete_data_disks_on_termination = true
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -32,7 +75,7 @@ resource "azurerm_virtual_machine" "APPVM-02" {
   resource_group_name   = var.resourceGroupName
   network_interface_ids = [azurerm_network_interface.NIC-APP-02.id]
   vm_size               = var.VMSize
-
+delete_data_disks_on_termination = true
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -60,6 +103,7 @@ resource "azurerm_virtual_machine" "APPVM-03" {
   resource_group_name   = var.resourceGroupName
   network_interface_ids = [azurerm_network_interface.NIC-APP-03.id]
   vm_size               = var.VMSize
+  delete_data_disks_on_termination = true
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -80,7 +124,7 @@ resource "azurerm_virtual_machine" "APPVM-03" {
   os_profile_linux_config {
     disable_password_authentication = false
   }
-}
+}*/
 resource "azurerm_network_interface" "NIC-APP-01" {
   name                = "NI-APP-01"
   location            = azurerm_resource_group.resourceGroup.location

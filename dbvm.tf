@@ -1,10 +1,12 @@
-#create VM for DB
+#create VM for
+/*
 resource "azurerm_virtual_machine" "DBVM" {
   name                  = "DBVM"
   location              = var.location
   resource_group_name   = var.resourceGroupName
   network_interface_ids = [azurerm_network_interface.DB-NI.id]
   vm_size               = var.VMSize
+  delete_data_disks_on_termination = true
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -27,7 +29,7 @@ resource "azurerm_virtual_machine" "DBVM" {
   }
 }
 
-
+*/
 resource "azurerm_network_interface" "DB-NI" {
   name                = "DB-NI"
   location            = azurerm_resource_group.resourceGroup.location
@@ -35,7 +37,19 @@ resource "azurerm_network_interface" "DB-NI" {
 
   ip_configuration {
     name                          = "internal-IP-DBVM"
-    subnet_id                     = azurerm_subnet.PublicSubnet.id
+    subnet_id                     = azurerm_subnet.PrivateSubnet.id
     private_ip_address_allocation = "Dynamic"
   }
+}
+module "DBVM" {
+  source = "./VMmodule"
+  UbuntuVersion = var.UbuntuVersion
+  VMSize = var.VMSize
+  diskName = "Disk-DB"
+  location = var.location
+  machineName = "DBVM"
+  networkInterfaceid =[azurerm_network_interface.DB-NI.id]
+  password = var.password
+  resourceGroupName = var.resourceGroupName
+  username = var.username
 }

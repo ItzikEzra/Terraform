@@ -13,5 +13,5 @@ variable "VMSize" {
 }
 variable "UbuntuVersion" {
   type = string
-  default = "18.04-LTS"
+  default ="20_04-lts-gen2"
 }

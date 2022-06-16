@@ -79,7 +79,7 @@ resource "azurerm_network_security_group" "PrivateNSG" {
     destination_address_prefix = "*"
   }
   security_rule {
-    name                       = "22_ruleO"
+    name                       = "22_rule"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
