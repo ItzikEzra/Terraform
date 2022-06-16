@@ -91,7 +91,7 @@ resource "azurerm_lb_rule" "FrontLBRule" {
   frontend_port                  = 8080
   backend_port                   = 8080
   frontend_ip_configuration_name = azurerm_lb.AppLoadBalancer.frontend_ip_configuration[0].name
-  #probe_id                       = azurerm_lb_probe.front_lb_probe.id
+  probe_id                       = azurerm_lb_probe.front_lb_probe.id
   backend_address_pool_id        = azurerm_lb_backend_address_pool.lb_back_pool_address.id
 }
 
