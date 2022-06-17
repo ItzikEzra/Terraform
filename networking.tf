@@ -75,7 +75,7 @@ resource "azurerm_network_security_group" "PrivateNSG" {
     protocol                   = "Tcp"
     source_port_range          = "5432"
     destination_port_range     = "5432"
-    source_address_prefix      = "*"
+    source_address_prefix      = "10.0.0.0/24"
     destination_address_prefix = "*"
   }
   security_rule {
@@ -86,8 +86,19 @@ resource "azurerm_network_security_group" "PrivateNSG" {
     protocol                   = "*"
     source_port_range          = "22"
     destination_port_range     = "22"
-    source_address_prefix      = "*"
+    source_address_prefix      = "10.0.0.0/24"
     destination_address_prefix = "*"
+  }
+    security_rule {
+    name                       = "closeAzuredefault"
+    priority                   = 4096
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
   }
   depends_on = [
     azurerm_resource_group.resourceGroup,
