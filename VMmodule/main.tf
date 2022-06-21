@@ -8,7 +8,8 @@ variable "networkInterfaceid" {}
 variable "machineName" {}
 variable "diskName" {}
 resource "azurerm_virtual_machine" "VM" {
-  name                  = var.machineName
+ # name                  = var.machineName
+  name =                var.machineName
   location              = var.location
   resource_group_name   = var.resourceGroupName
   network_interface_ids = var.networkInterfaceid

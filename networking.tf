@@ -147,11 +147,15 @@ resource "azurerm_subnet_nat_gateway_association" "AssocPublic" {
 ##########################################
 #Associate Neteork interfaces to NSG's
 ##########################################
-resource "azurerm_network_interface_security_group_association" "AssocAPPVM1" {
-  network_interface_id      = azurerm_network_interface.NIC-APP-01.id
+resource "azurerm_network_interface_security_group_association" "AssocAPPVM" {
+    
+    count = 3
+    network_interface_id = azurerm_network_interface.nics[count.index+1].id
+  
+ # network_interface_id      = azurerm_network_interface.nics[0].id
   network_security_group_id = azurerm_network_security_group.PublicNSG.id
 }
-
+/*
 resource "azurerm_network_interface_security_group_association" "AssocAPPVM2" {
   network_interface_id      = azurerm_network_interface.NIC-APP-02.id
   network_security_group_id = azurerm_network_security_group.PublicNSG.id
@@ -161,7 +165,7 @@ resource "azurerm_network_interface_security_group_association" "AssocAPPVM3" {
   network_interface_id      = azurerm_network_interface.NIC-APP-03.id
   network_security_group_id = azurerm_network_security_group.PublicNSG.id
 }
-
+*/
 resource "azurerm_network_interface_security_group_association" "AssocDBVM" {
   network_interface_id      = azurerm_network_interface.DB-NI.id
   network_security_group_id = azurerm_network_security_group.PrivateNSG.id

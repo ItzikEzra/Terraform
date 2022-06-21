@@ -26,11 +26,12 @@ resource "azurerm_lb_backend_address_pool" "lb_back_pool_address" {
 }
 
 resource "azurerm_network_interface_backend_address_pool_association" "vm1-nic-assoc" {
-  network_interface_id    = azurerm_network_interface.NIC-APP-01.id
-  ip_configuration_name   = "internal-IP-VM1"
+  count = 3
+  network_interface_id    = element(azurerm_network_interface.nics.*.id,count.index)
+  ip_configuration_name   = "internal-IP-VM${count.index+1}"
   backend_address_pool_id = azurerm_lb_backend_address_pool.lb_back_pool_address.id
 }
-
+/*
 resource "azurerm_network_interface_backend_address_pool_association" "vm2-nic-assoc" {
   network_interface_id    = azurerm_network_interface.NIC-APP-02.id
   ip_configuration_name   = "internal-IP-VM2"
@@ -42,7 +43,7 @@ resource "azurerm_network_interface_backend_address_pool_association" "vm3-nic-a
   backend_address_pool_id = azurerm_lb_backend_address_pool.lb_back_pool_address.id
 }
 
-
+*/
 resource "azurerm_lb_probe" "front_lb_probe" {
   resource_group_name = azurerm_resource_group.resourceGroup.name
   loadbalancer_id     = azurerm_lb.AppLoadBalancer.id
