@@ -1,3 +1,11 @@
+variable "mangedPostgresName" {
+  default = "postgres-db"
+  
+}
+variable "vnet-addressprefix" {
+  default = ["10.0.0.0/16"]
+  
+}
 variable "location" {
   type=string 
   default     = "eastus"
@@ -5,7 +13,7 @@ variable "location" {
 }
 variable "resourceGroupName" {
   type=string 
-  default     = "Terraform-Week-05"
+  default     = "Staging"
   description = "Choosen Resource group name variable"
 }
 

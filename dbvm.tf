@@ -1,4 +1,5 @@
 #create network interface for DBvm
+/*
 resource "azurerm_network_interface" "DB-NI" {
   name                = "DB-NI"
   location            = azurerm_resource_group.resourceGroup.location
@@ -23,3 +24,4 @@ module "DBVM" {
   resourceGroupName = var.resourceGroupName
   username = var.username
 }
+*/
