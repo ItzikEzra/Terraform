@@ -1,3 +1,7 @@
+variable "psqlservicesName" {
+  default = "psqlservicesname"
+  
+}
 variable "mangedPostgresName" {
   default = "postgres-db"
   
