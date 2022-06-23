@@ -1,0 +1,67 @@
+---
+- hosts: publicVMS
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: install node version 14
+      become: true
+      shell: curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+    - name: Clone a github repository
+      git:
+        repo: https://github.com/ItzikEzra/bootcamp-app.git
+        dest: ~/bootcamp
+        clone: yes
+        update: yes
+
+    - name: Write .env file
+      shell: |
+        echo 'PORT=8080
+        #internal ip addrass of the vm
+        HOST={{ ansible_default_ipv4.address }}
+        NODE_ENV=development
+
+        #extrnal host url
+        HOST_URL={{load_balncer_ip}}
+
+        COOKIE_ENCRYPT_PWD=superAwesomePasswordStringThatIsAtLeast32CharactersLong!
+        # Okta configuration
+        OKTA_ORG_URL={{okta_org_url}}
+        OKTA_CLIENT_ID={{okta_client_id}}
+        OKTA_CLIENT_SECRET={{okta_client_secret}}
+        # Postgres configuration
+        #internal db server ip
+        #should be server name
+        PGHOST={{pghost}}
+        PGUSERNAME={{pgusername}}
+        PGDATABASE={{pgdatabase}}
+        PGPASSWORD={{pgpassword}}
+        PGPORT=5432' >>~/bootcamp/.env
+    - name: imstall dependcies
+      shell: |
+        cd ~/bootcamp && npm install
+
+    - name: imstall dependcies
+      shell: |
+        cd ~/bootcamp && npm run initdb
+
+    - name: install pm2 global
+      become: true
+      command: "sudo npm install pm2@latest -g"
+
+    - name: pm2 startup
+      become: true
+      command: "pm2 startup"
+
+    - name: pm2 execute path
+      become: true
+      command: "env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u bootcamp --hp /home/Itzik/bootcamp"
+
+    - name: run app
+      command: "pm2 start 'npm run dev'"
+      args:
+        chdir: /home/Itzik/bootcamp/
+
+    - name: save app in pm2 startup state
+      become: true
+      command: "pm2 save"

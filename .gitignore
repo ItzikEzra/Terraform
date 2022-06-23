@@ -1,4 +1,7 @@
 
+vars-prod.yml
+vars-staging.yml
+
 secrets.tf
 # Local .terraform directories
 **/.terraform/*
