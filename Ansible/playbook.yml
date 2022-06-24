@@ -55,7 +55,7 @@
 
     - name: pm2 execute path
       become: true
-      command: "env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u bootcamp --hp /home/Itzik/bootcamp"
+      command: "sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u Itzik --hp /home/Itzik"
 
     - name: run app
       command: "pm2 start 'npm run dev'"
