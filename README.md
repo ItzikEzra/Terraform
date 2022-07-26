@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 On this branch I add an ansible! </br>
+=======
+>>>>>>> a5816fd7eff4033dc1a79bfaccb9a9b3f9b59aad
 <b>What is Ansible?</b> </br>
 
 Ansible is an open source IT configuration management (CM) and automation platform, </br>
