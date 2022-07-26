@@ -13,12 +13,20 @@ resource "azurerm_subnet" "PublicSubnet" {
   virtual_network_name = azurerm_virtual_network.Vnet-week05.name
   address_prefixes     = ["10.0.0.0/24"]
 }
-# Create subnet for private use
 resource "azurerm_subnet" "PrivateSubnet" {
   name                 = "DBsubnet"
   resource_group_name  = azurerm_resource_group.resourceGroup.name
   virtual_network_name = azurerm_virtual_network.Vnet-week05.name
   address_prefixes     = ["10.0.2.0/24"]
+  #   delegation for the DB
+  delegation {
+    name = "delegation"
+
+    service_delegation {
+      name    = "Microsoft.DBforPostgreSQL/flexibleServers"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
+    }
+  }
 }
 #create NSG
 resource "azurerm_network_security_group" "PublicNSG" {
@@ -68,7 +76,7 @@ resource "azurerm_network_security_group" "PrivateNSG" {
   location            = var.location
   resource_group_name = azurerm_resource_group.resourceGroup.name
   security_rule {
-    name                       = "5432_rule"
+    name                       = "5432_ruleIn"
     priority                   = 110
     direction                  = "Inbound"
     access                     = "Allow"
@@ -78,6 +86,18 @@ resource "azurerm_network_security_group" "PrivateNSG" {
     source_address_prefix      = "10.0.0.0/24"
     destination_address_prefix = "*"
   }
+   security_rule {
+    name                       = "5432_ruleOut"
+    priority                   = 120
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "5432"
+    destination_port_range     = "5432"
+    source_address_prefix      = "*"
+    destination_address_prefix = "10.0.0.0/24"
+  }
+  /*
   security_rule {
     name                       = "22_rule"
     priority                   = 100
@@ -89,6 +109,8 @@ resource "azurerm_network_security_group" "PrivateNSG" {
     source_address_prefix      = "10.0.0.0/24"
     destination_address_prefix = "*"
   }
+  */
+  /*
     security_rule {
     name                       = "closeAzuredefault"
     priority                   = 4096
@@ -100,6 +122,7 @@ resource "azurerm_network_security_group" "PrivateNSG" {
     source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "VirtualNetwork"
   }
+  */
   depends_on = [
     azurerm_resource_group.resourceGroup,
   ]
@@ -161,8 +184,8 @@ resource "azurerm_network_interface_security_group_association" "AssocAPPVM3" {
   network_interface_id      = azurerm_network_interface.NIC-APP-03.id
   network_security_group_id = azurerm_network_security_group.PublicNSG.id
 }
-
+/*
 resource "azurerm_network_interface_security_group_association" "AssocDBVM" {
-  network_interface_id      = azurerm_network_interface.DB-NI.id
+  network_interface_id      = azurerm_postgresql_flexible_server.psqlservice.id
   network_security_group_id = azurerm_network_security_group.PrivateNSG.id
-}
+}*/
