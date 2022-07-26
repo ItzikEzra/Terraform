@@ -28,7 +28,7 @@ resource "azurerm_postgresql_flexible_server_database" "db" {
 # fw
 
 resource "azurerm_postgresql_flexible_server_firewall_rule" "fwconfig" {
-  name      = "example-fw"
+  name      = "postgres-fw"
   server_id = azurerm_postgresql_flexible_server.psqlservice.id
 
   start_ip_address = "0.0.0.0"
